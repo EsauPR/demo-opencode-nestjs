@@ -57,42 +57,188 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
+# OpenCode
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Instalation
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+curl -fsSL https://opencode.ai/install | bash
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Setup
 
-## Resources
+Condigure LLM provider
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+opencode auth login
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+And run OpenCode
 
-## Support
+```bash
+opencode
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Next, initialize OpenCode for the project by running the following command.
 
-## Stay in touch
+```opencode project
+/init
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+This will get OpenCode to analyze your project and create an AGENTS.md file in the project root.
 
-## License
+- Scan the directory
+- Build lint and test commands
+- Code style guidelines
+- Scan for cursor or copilot rules
+- Create AGENTS.md file
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## GitHub integration
+
+```bash
+opencode github install
+```
+
+This install de app on GitHub and create the main workflow to interact with.
+
+## Models
+
+Read: https://opencode.ai/docs/models/
+
+Select a model
+
+```
+/models
+```
+
+config a provider
+
+```bash
+opencode auth login
+```
+
+## Tools
+
+Tools are the main way on how the LLM can perform actions in the code.
+
+- bash: allows the LLM to run terminal commands
+- edit: performs precise edits to files by replacing exact text matches
+- write: allow the LLM to create new files
+- read: reads files and returns their contents
+- grep: Fast content search across your codebase
+- glob: search for files using glob patterns
+- list: lists directory contents
+- patch: useful for applying diffs and patches from various sources
+- todowrite: creates and updates task lists to track progress during complex operations
+- todoread: reads the current todo list state
+- webfetch: allows the LLM to fetch and read web pages
+
+**Custom tools**:
+Custom tools let you define your own functions that the LLM can call
+
+## MCP Servers
+
+You can add external tools to OpenCode using the Model Context Protocol, or MCP.
+
+OpenCode supports both:
+
+Local servers
+Remote servers
+
+## Rules
+
+You can provide custom instructions to opencode by creating an AGENTS.md file.
+
+- Project
+- Global: `~/.config/opencode/AGENTS.md`
+
+### Custom rules
+
+- Global: `~/.config/opencode/opencode.json`
+- Project: `opencode.json`
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["CONTRIBUTING.md", "docs/guidelines.md", ".cursor/rules/*.md"]
+}
+```
+
+This allows you and your team to reuse existing rules rather than having to duplicate them to AGENTS.md.
+
+### Referencing External Files
+
+- Using `opencode.json`
+- Using explicit reference on `AGENTS.ms`: `@test/testing-guidelines.md`
+
+
+## Agents
+
+### Primary
+
+- Build
+- Plan
+
+Change using TAB
+
+### Subagents
+
+Subagents are specialized assistants:
+
+- primary agents can invoke for specific tasks.
+- invoke them by @ mentioning them in your messages.
+
+Two ways to reference in:
+
+- `opencode.json`
+- `.opencode/agent/{agent}.md`
+
+
+Create a agent
+
+```bash
+opencode agent create
+```
+
+### Uses cases
+
+- Build agent: Full development work with all tools enabled
+- Plan agent: Analysis and planning without making changes
+- Review agent: Code review with read-only access plus documentation tools
+- Debug agent: Focused on investigation with bash and read tools enabled
+- Docs agent: Documentation writing with file operations but no system commands
+
+
+## Commands
+
+Custom commands let you specify a prompt you want to run when that command is executed in the TUI
+
+```
+/my-command
+```
+
+- You can pass arguments
+- You can execute a explicit shell command
+- Support file references
+
+
+## Formaters
+
+OpenCode automatically formats files after they are written or edited using language-specific formatters
+
+## LSP servers
+
+OpenCode integrates with your Language Server Protocol (LSP) to help the LLM interact with your codebase. It uses diagnostics to provide feedback to the LLM.
+
+Read:
+
+https://opencode.ai/docs/lsp/
+
+
+## MCP servers
+
+You can add external tools to OpenCode using the Model Context Protocol, or MCP.
+
+Read:
+
+https://opencode.ai/docs/mcp-servers/
